@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>Control Financiero y Presupuestal 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Librería para procesar el CSV -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
       --primary: #0b192c;
@@ -494,56 +492,8 @@
   </div>
 
   <script>
-    // ⚠️ REEMPLAZA ESTA URL CON TU ENLACE CSV DE "PUBLICAR EN LA WEB"
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlf2kL826sSWaXz7pVvVuAVqccva5-k9e9nyK2ZdNaQ0RXZIvXinmVDJnH9vv0d1sWBRHs_eubP3R9/pub?gid=275469149&single=true&output=csv';
-
-    function parsearCSVyRenderizar(rows) {
-      if (!rows || rows.length < 25) {
-        console.error("El formato de la hoja no coincide o faltan filas.");
-        document.getElementById('loading-overlay').style.display = 'none';
-        document.getElementById('sync-msg').innerText = '⚠️ Estructura no válida';
-        return;
-      }
-
-      const data = {
-        subtitulo: rows[1] ? rows[1][0] : '',
-        kpis: {
-          pptoSiroc: rows[4][0] || '$0',        // A5
-          contratado: rows[4][1] || '$0',       // B5
-          facturado: rows[4][2] || '$0',        // C5
-          pagado: rows[4][3] || '$0',           // D5
-          saldoPendiente: rows[4][5] || '$0',   // F5
-          porcentajePagado: rows[4][7] || '0%'  // H5
-        },
-        sucursales: [],
-        totalConsolidado: {
-          pptoSiroc: rows[24][1] || '$0',      // B25
-          contratado: rows[24][2] || '$0',     // C25
-          facturado: rows[24][3] || '$0',      // D25
-          pagado: rows[24][5] || '$0',         // F25
-          saldo: rows[24][6] || '$0',          // G25
-          porcentaje: rows[24][8] || '0%'      // I25
-        }
-      };
-
-      for (let i = 8; i <= 23; i++) {
-        const row = rows[i];
-        if (row && row[0] && row[0].trim() !== '') {
-          data.sucursales.push({
-            nombre: row[0].trim(),   // A
-            pptoSiroc: row[1] || '',  // B
-            contratado: row[2] || '', // C
-            facturado: row[3] || '',  // D
-            pagado: row[5] || '',     // F
-            saldo: row[6] || '',      // G
-            estatus: row[7] || '',    // H
-            porcentaje: row[8] || ''  // I
-          });
-        }
-      }
-
-      renderDashboard(data);
-    }
+    // PEGA AQUÍ LA URL COMPLETA DEL WEB APP DE APPS SCRIPT
+    const SCRIPT_URL = 'https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec';
 
     function renderDashboard(data) {
       document.getElementById('loading-overlay').style.display = 'none';
@@ -664,27 +614,24 @@
           <td class="num-col">${data.totalConsolidado.porcentaje}</td>
         </tr>
       `;
+      document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
     }
 
-    async function cargarDatos() {
-      try {
-        const response = await fetch(CSV_URL);
-        if (!response.ok) throw new Error("Respuesta no OK");
-        const csvText = await response.text();
+    // Petición dinámica JSONP
+    function cargarDatos() {
+      const oldScript = document.getElementById('jsonp-script');
+      if (oldScript) oldScript.remove();
 
-        Papa.parse(csvText, {
-          header: false,
-          skipEmptyLines: false,
-          complete: function(results) {
-            parsearCSVyRenderizar(results.data);
-            document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
-          }
-        });
-      } catch (err) {
-        console.error("Error cargando los datos:", err);
+      const script = document.createElement('script');
+      script.id = 'jsonp-script';
+      script.src = `${SCRIPT_URL}?callback=renderDashboard&_=${new Date().getTime()}`;
+      
+      script.onerror = function() {
         document.getElementById('loading-overlay').style.display = 'none';
         document.getElementById('sync-msg').innerText = '⚠️ Error de sincronización';
-      }
+      };
+
+      document.body.appendChild(script);
     }
 
     window.onload = cargarDatos;
