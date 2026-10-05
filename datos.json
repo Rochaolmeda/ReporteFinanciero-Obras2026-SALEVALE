@@ -1,9 +1,9 @@
 {
-  "subtitulo": "Consolidado de sucursales • Última actualización: 2026-10-05 16:13:56",
+  "subtitulo": "Consolidado de sucursales • Última actualización: 2026-10-05 16:28:14",
   "kpis": {
     "pptoSiroc": "$17,215,307.76",
     "contratado": "$12,405,975.25",
-    "facturado": "$1,012,345.00",
+    "facturado": "$1,013,924.00",
     "pagado": "$1,234,567.00",
     "saldoPendiente": "$11,171,408.25",
     "porcentajePagado": "10.0%"
@@ -13,10 +13,10 @@
       "nombre": "CALERA",
       "pptoSiroc": "$818,129.00",
       "contratado": "$965,892.89",
-      "facturado": "$0.00",
+      "facturado": "$1,234.00",
       "pagado": "$0.00",
       "saldo": "$965,892.89",
-      "estatus": "Sin pendientes",
+      "estatus": "Pendiente de pago",
       "porcentaje": "0.0%"
     },
     {
@@ -153,10 +153,10 @@
       "nombre": "VICENTE GUERRERO",
       "pptoSiroc": "$0.00",
       "contratado": "$0.00",
-      "facturado": "$0.00",
+      "facturado": "$345.00",
       "pagado": "$0.00",
       "saldo": "$0.00",
-      "estatus": "Sin pendientes",
+      "estatus": "Pendiente de pago",
       "porcentaje": "0.0%"
     },
     {
@@ -173,7 +173,7 @@
   "totalConsolidado": {
     "pptoSiroc": "$17,215,307.76",
     "contratado": "$12,405,975.25",
-    "facturado": "$1,012,345.00",
+    "facturado": "$1,013,924.00",
     "pagado": "$1,234,567.00",
     "saldo": "$11,171,408.25",
     "porcentaje": "10.0%"
