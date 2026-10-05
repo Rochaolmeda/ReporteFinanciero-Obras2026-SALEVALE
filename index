@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control Financiero y Presupuestal 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0b192c;
+      --primary-card: #1e3e62;
+      --bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      
+      /* Paleta Financiera */
+      --money-green: #059669;
+      --money-green-bg: #ecfdf5;
+      --debt-red: #dc2626;
+      --debt-red-bg: #fef2f2;
+      --contract-blue: #2563eb;
+      --contract-blue-bg: #eff6ff;
+      --invoice-amber: #d97706;
+      --invoice-amber-bg: #fffbeb;
+      --siroc-purple: #7c3aed;
+      --siroc-purple-bg: #f5f3ff;
+
+      /* Alertas especiales */
+      --alert-overpay-border: #ef4444;
+      --alert-overpay-bg: #fff5f5;
+      --alert-complete-border: #10b981;
+      --alert-complete-bg: #f0fdf4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px 16px;
+      line-height: 1.4;
+    }
+
+    .container { width: 100%; max-width: 1400px; margin: 0 auto; }
+
+    /* Encabezado */
+    .header {
+      background: linear-gradient(135deg, #071324 0%, #112239 100%);
+      color: white;
+      padding: 24px 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px -4px rgba(11, 25, 44, 0.2);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(5, 150, 105, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .header h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; }
+    .header p { color: #94a3b8; font-size: 0.88rem; margin-top: 4px; }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* KPIs Globales */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      position: relative;
+    }
+
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .kpi-title { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+    .kpi-icon { font-size: 1.2rem; }
+    .kpi-value { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.4px; }
+
+    .kpi-card.purple { border-bottom: 3px solid var(--siroc-purple); }
+    .kpi-card.blue { border-bottom: 3px solid var(--contract-blue); }
+    .kpi-card.blue .kpi-value { color: var(--contract-blue); }
+    .kpi-card.amber { border-bottom: 3px solid var(--invoice-amber); }
+    .kpi-card.amber .kpi-value { color: var(--invoice-amber); }
+    .kpi-card.green { border-bottom: 3px solid var(--money-green); }
+    .kpi-card.green .kpi-value { color: var(--money-green); }
+    .kpi-card.red { border-bottom: 3px solid var(--debt-red); }
+    .kpi-card.red .kpi-value { color: var(--debt-red); }
+    .kpi-card.neutral { border-bottom: 3px solid var(--primary-card); }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 1. SECCIÓN: Tarjetas de Sucursal */
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .branch-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+
+    .branch-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    }
+
+    /* ESTILOS DE ALERTA EN TARJETAS */
+    .branch-card.card-overpaid {
+      border: 2px solid var(--alert-overpay-border);
+      background-color: var(--alert-overpay-bg);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+    }
+
+    .branch-card.card-completed {
+      border: 2px solid var(--alert-complete-border);
+      background-color: var(--alert-complete-bg);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+    }
+
+    .branch-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .branch-card-title {
+      font-weight: 800;
+      font-size: 0.96rem;
+      color: var(--primary);
+      line-height: 1.25;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 14px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-ok { background: var(--money-green-bg); color: var(--money-green); border: 1px solid #a7f3d0; }
+    .badge-pending { background: var(--debt-red-bg); color: var(--debt-red); border: 1px solid #fecaca; }
+    .badge-overpaid {
+      background: #dc2626;
+      color: white;
+      border: 1px solid #b91c1c;
+      animation: blinkAlert 2.5s infinite;
+    }
+    .badge-complete {
+      background: #059669;
+      color: white;
+      border: 1px solid #047857;
+    }
+
+    @keyframes blinkAlert {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      background: #e2e8f0;
+      height: 7px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 5px;
+    }
+
+    .progress-bar.bar-overpaid {
+      background: linear-gradient(90deg, #f87171, #dc2626);
+    }
+
+    .branch-fin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .fin-box {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .fin-box.box-contract { background: var(--contract-blue-bg); }
+    .fin-box.box-invoice { background: var(--invoice-amber-bg); }
+    .fin-box.box-paid { background: var(--money-green-bg); }
+    .fin-box.box-debt { background: var(--debt-red-bg); }
+    .fin-box.box-overpay-highlight { background: #fee2e2; border: 1px solid #fca5a5; }
+
+    .fin-box span {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .fin-box.box-contract span { color: #1e40af; }
+    .fin-box.box-invoice span { color: #92400e; }
+    .fin-box.box-paid span { color: #065f46; }
+    .fin-box.box-debt span { color: #991b1b; }
+    .fin-box.box-overpay-highlight span { color: #b91c1c; }
+
+    .fin-box strong { display: block; font-size: 0.88rem; font-weight: 800; }
+    .fin-box.box-contract strong { color: var(--contract-blue); }
+    .fin-box.box-invoice strong { color: var(--invoice-amber); }
+    .fin-box.box-paid strong { color: var(--money-green); }
+    .fin-box.box-debt strong { color: var(--debt-red); }
+    .fin-box.box-overpay-highlight strong { color: #b91c1c; }
+
+    /* 2. SECCIÓN: TABLA AJUSTADA SIN SCROLLBAR CON ALERTAS */
+    .table-container {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      margin-bottom: 30px;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.82rem;
+    }
+
+    th:nth-child(1), td:nth-child(1) { width: 18%; }
+    th:nth-child(2), td:nth-child(2) { width: 12%; }
+    th:nth-child(3), td:nth-child(3) { width: 12%; }
+    th:nth-child(4), td:nth-child(4) { width: 11%; }
+    th:nth-child(5), td:nth-child(5) { width: 11%; }
+    th:nth-child(6), td:nth-child(6) { width: 12%; }
+    th:nth-child(7), td:nth-child(7) { width: 12%; }
+    th:nth-child(8), td:nth-child(8) { width: 12%; }
+
+    th {
+      background: #0b192c;
+      color: white;
+      padding: 10px 8px;
+      font-weight: 700;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+
+    td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+
+    tr:nth-child(even) td { background-color: #fbfcfd; }
+    tr:hover td { background-color: #f1f5f9; }
+
+    /* Filas con Alertas */
+    tr.tr-overpaid td {
+      background-color: #fef2f2 !important;
+      border-bottom: 1px solid #fecaca;
+    }
+    tr.tr-completed td {
+      background-color: #f0fdf4 !important;
+      border-bottom: 1px solid #bbf7d0;
+    }
+
+    .num-col {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.8rem;
+    }
+
+    .branch-name {
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      font-size: 0.8rem;
+    }
+
+    .table-progress-wrap {
+      width: 36px;
+      background: #e2e8f0;
+      height: 5px;
+      border-radius: 3px;
+      overflow: hidden;
+      display: inline-block;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    tr.total-row td {
+      background: #e2e8f0 !important;
+      font-weight: 800;
+      border-top: 2px solid #94a3b8;
+      font-size: 0.82rem;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      z-index: 1000;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading-overlay">
+    <div style="font-size: 2.2rem;">💵</div>
+    <div>Sincronizando Estado Financiero de Sucursales...</div>
+  </div>
+
+  <div class="container">
+    <!-- Encabezado -->
+    <header class="header">
+      <div>
+        <div class="header-badge">📊 Control Financiero de Obra</div>
+        <h1>ESTADO PRESUPUESTAL EJECUTIVO</h1>
+        <p id="subtitulo-txt">Consolidado de sucursales • Presupuesto vs Facturado vs Pagado</p>
+      </div>
+      <div class="sync-status">
+        <span class="pulse-dot"></span>
+        <span id="sync-msg">Flujo en vivo (Recarga: 45s)</span>
+      </div>
+    </header>
+
+    <!-- Indicadores Globales (KPIs) -->
+    <section class="kpi-grid">
+      <div class="kpi-card purple">
+        <div class="kpi-top">
+          <span class="kpi-title">Presupuesto SIROC</span>
+          <span class="kpi-icon">🏛️</span>
+        </div>
+        <div class="kpi-value" id="kpi-siroc">$0</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-top">
+          <span class="kpi-title">Total Contratado</span>
+          <span class="kpi-icon">📜</span>
+        </div>
+        <div class="kpi-value" id="kpi-contratado">$0</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-top">
+          <span class="kpi-title">Total Facturado</span>
+          <span class="kpi-icon">🧾</span>
+        </div>
+        <div class="kpi-value" id="kpi-facturado">$0</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-top">
+          <span class="kpi-title">Total Pagado</span>
+          <span class="kpi-icon">💰</span>
+        </div>
+        <div class="kpi-value" id="kpi-pagado">$0</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-top">
+          <span class="kpi-title">Por Liquidar</span>
+          <span class="kpi-icon">⏳</span>
+        </div>
+        <div class="kpi-value" id="kpi-saldo">$0</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-top">
+          <span class="kpi-title">% Pagado / Contrato</span>
+          <span class="kpi-icon">📈</span>
+        </div>
+        <div class="kpi-value" id="kpi-porcentaje">0%</div>
+      </div>
+    </section>
+
+    <!-- 1. Tarjetas Financieras por Sucursal -->
+    <h2 class="section-title"><span>💳</span> Avance y Flujo Financiero por Sucursal</h2>
+    <section class="branch-grid" id="branch-grid-container">
+      <!-- Inyectadas dinámicamente -->
+    </section>
+
+    <!-- 2. Tabla Consolidada Ajustada (Sin Scroll) -->
+    <h2 class="section-title"><span>📑</span> Estado Consolidado Detallado</h2>
+    <section class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Sucursal / Obra</th>
+            <th class="num-col">🏛️ Ppto SIROC</th>
+            <th class="num-col">📜 Contratado</th>
+            <th class="num-col">🧾 Facturado</th>
+            <th class="num-col">💰 Pagado</th>
+            <th class="num-col">⏳ Saldo</th>
+            <th style="text-align: center;">Estatus</th>
+            <th style="text-align: right;">📈 % Pagado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <!-- Inyectadas dinámicamente -->
+        </tbody>
+        <tfoot id="tabla-foot">
+          <!-- Total consolidado -->
+        </tfoot>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    function renderDashboard(data) {
+      document.getElementById('loading-overlay').style.display = 'none';
+
+      // 1. Textos y KPIs Generales
+      if (data.subtitulo) {
+        document.getElementById('subtitulo-txt').innerText = data.subtitulo;
+      }
+      document.getElementById('kpi-siroc').innerText = data.kpis.pptoSiroc;
+      document.getElementById('kpi-contratado').innerText = data.kpis.contratado;
+      document.getElementById('kpi-facturado').innerText = data.kpis.facturado;
+      document.getElementById('kpi-pagado').innerText = data.kpis.pagado;
+      document.getElementById('kpi-saldo').innerText = data.kpis.saldoPendiente;
+      document.getElementById('kpi-porcentaje').innerText = data.kpis.porcentajePagado;
+
+      // 2. Render de Tarjetas y Tabla
+      const gridContainer = document.getElementById('branch-grid-container');
+      const tbody = document.getElementById('tabla-body');
+      gridContainer.innerHTML = '';
+      tbody.innerHTML = '';
+
+      data.sucursales.forEach(s => {
+        // Cálculo del valor porcentual numérico
+        let pctRaw = parseFloat(s.porcentaje.replace('%', '').replace(',', '.')) || 0;
+        let isOverpaid = pctRaw > 100;
+        let isCompleted = Math.abs(pctRaw - 100) < 0.05;
+        let pctBarWidth = isOverpaid ? 100 : Math.min(Math.max(pctRaw, 0), 100);
+
+        // Determinación de clases y alertas
+        let cardAlertClass = '';
+        let trAlertClass = '';
+        let badgeHtml = '';
+        let progressBarClass = isOverpaid ? 'bar-overpaid' : '';
+        let balanceLabel = '⏳ Por Pagar';
+        let balanceBoxClass = 'box-debt';
+
+        if (isOverpaid) {
+          cardAlertClass = 'card-overpaid';
+          trAlertClass = 'tr-overpaid';
+          badgeHtml = `<span class="badge badge-overpaid">🚨 SOBREPAGO (${s.porcentaje})</span>`;
+          balanceLabel = '⚠️ Excedente';
+          balanceBoxClass = 'box-overpay-highlight';
+        } else if (isCompleted) {
+          cardAlertClass = 'card-completed';
+          trAlertClass = 'tr-completed';
+          badgeHtml = `<span class="badge badge-complete">🏁 100% CUBIERTO</span>`;
+          balanceLabel = '✅ Liquidado';
+          balanceBoxClass = 'box-paid';
+        } else {
+          const isPendiente = s.estatus.toLowerCase().includes('pendiente');
+          const badgeClass = isPendiente ? 'badge-pending' : 'badge-ok';
+          const badgeIcon = isPendiente ? '⚠️' : '✅';
+          badgeHtml = `<span class="badge ${badgeClass}">${badgeIcon} ${s.estatus}</span>`;
+        }
+
+        // Render de la Tarjeta
+        const card = document.createElement('div');
+        card.className = `branch-card ${cardAlertClass}`;
+        card.innerHTML = `
+          <div>
+            <div class="branch-card-header">
+              <span class="branch-card-title">🏢 ${s.nombre}</span>
+              ${badgeHtml}
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">
+              Avance Real: <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'var(--text)')};">${s.porcentaje}</strong>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar ${progressBarClass}" style="width: ${pctBarWidth}%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="branch-fin-grid">
+            <div class="fin-box box-contract">
+              <span>📜 Contratado</span>
+              <strong>${s.contratado}</strong>
+            </div>
+            <div class="fin-box box-invoice">
+              <span>🧾 Facturado</span>
+              <strong>${s.facturado}</strong>
+            </div>
+            <div class="fin-box box-paid">
+              <span>💰 Pagado</span>
+              <strong>${s.pagado}</strong>
+            </div>
+            <div class="fin-box ${balanceBoxClass}">
+              <span>${balanceLabel}</span>
+              <strong>${s.saldo}</strong>
+            </div>
+          </div>
+        `;
+        gridContainer.appendChild(card);
+
+        // Render de la Fila en la Tabla
+        const tr = document.createElement('tr');
+        if (trAlertClass) tr.className = trAlertClass;
+        tr.innerHTML = `
+          <td class="branch-name">${s.nombre}</td>
+          <td class="num-col">${s.pptoSiroc}</td>
+          <td class="num-col" style="color: var(--contract-blue); font-weight: 600;">${s.contratado}</td>
+          <td class="num-col" style="color: var(--invoice-amber); font-weight: 600;">${s.facturado}</td>
+          <td class="num-col" style="color: var(--money-green); font-weight: 600;">${s.pagado}</td>
+          <td class="num-col" style="color: ${isOverpaid || s.saldo.includes('-') ? 'var(--debt-red)' : 'inherit'}; font-weight: 700;">${s.saldo}</td>
+          <td style="text-align: center;">${badgeHtml}</td>
+          <td class="num-col">
+            <div class="table-progress-wrap">
+              <div class="progress-bar ${progressBarClass}" style="width: ${pctBarWidth}%;"></div>
+            </div>
+            <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'inherit')}">${s.porcentaje}</strong>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // 3. Fila de Total Consolidado
+      const tfoot = document.getElementById('tabla-foot');
+      tfoot.innerHTML = `
+        <tr class="total-row">
+          <td>TOTAL GENERAL</td>
+          <td class="num-col">${data.totalConsolidado.pptoSiroc}</td>
+          <td class="num-col" style="color: var(--contract-blue);">${data.totalConsolidado.contratado}</td>
+          <td class="num-col" style="color: var(--invoice-amber);">${data.totalConsolidado.facturado}</td>
+          <td class="num-col" style="color: var(--money-green);">${data.totalConsolidado.pagado}</td>
+          <td class="num-col" style="color: var(--debt-red);">${data.totalConsolidado.saldo}</td>
+          <td style="text-align: center;">-</td>
+          <td class="num-col">${data.totalConsolidado.porcentaje}</td>
+        </tr>
+      `;
+    }
+
+    function cargarDatos() {
+      google.script.run
+        .withSuccessHandler(renderDashboard)
+        .withFailureHandler(err => {
+          console.error(err);
+          document.getElementById('sync-msg').innerText = '⚠️ Error al sincronizar';
+        })
+        .obtenerDatosReporte();
+    }
+
+    window.onload = cargarDatos;
+    setInterval(cargarDatos, 45000);
+  </script>
+</body>
+</html>
