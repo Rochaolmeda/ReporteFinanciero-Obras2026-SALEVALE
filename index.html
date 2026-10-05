@@ -14,7 +14,6 @@
       --text: #0f172a;
       --text-muted: #64748b;
       
-      /* Paleta Financiera */
       --money-green: #059669;
       --money-green-bg: #ecfdf5;
       --debt-red: #dc2626;
@@ -26,7 +25,6 @@
       --siroc-purple: #7c3aed;
       --siroc-purple-bg: #f5f3ff;
 
-      /* Alertas especiales */
       --alert-overpay-border: #ef4444;
       --alert-overpay-bg: #fff5f5;
       --alert-complete-border: #10b981;
@@ -44,7 +42,6 @@
 
     .container { width: 100%; max-width: 1400px; margin: 0 auto; }
 
-    /* Encabezado */
     .header {
       background: linear-gradient(135deg, #071324 0%, #112239 100%);
       color: white;
@@ -104,7 +101,6 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    /* KPIs Globales */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -153,7 +149,6 @@
       gap: 8px;
     }
 
-    /* 1. SECCIÓN: Tarjetas de Sucursal */
     .branch-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
@@ -296,7 +291,6 @@
     .fin-box.box-debt strong { color: var(--debt-red); }
     .fin-box.box-overpay-highlight strong { color: #b91c1c; }
 
-    /* 2. SECCIÓN: TABLA AJUSTADA SIN SCROLLBAR CON ALERTAS */
     .table-container {
       background: var(--card-bg);
       border-radius: 14px;
@@ -406,7 +400,7 @@
 
   <div id="loading-overlay">
     <div style="font-size: 2.2rem;">💵</div>
-    <div>Sincronizando Estado Financiero...</div>
+    <div>Cargando Estado Financiero...</div>
   </div>
 
   <div class="container">
@@ -418,7 +412,7 @@
       </div>
       <div class="sync-status">
         <span class="pulse-dot"></span>
-        <span id="sync-msg">Flujo en vivo (Recarga: 45s)</span>
+        <span id="sync-msg">Flujo en vivo</span>
       </div>
     </header>
 
@@ -492,9 +486,6 @@
   </div>
 
   <script>
-    // PEGA AQUÍ LA URL COMPLETA DEL WEB APP DE APPS SCRIPT
-    const SCRIPT_URL = 'https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec';
-
     function renderDashboard(data) {
       document.getElementById('loading-overlay').style.display = 'none';
 
@@ -614,24 +605,21 @@
           <td class="num-col">${data.totalConsolidado.porcentaje}</td>
         </tr>
       `;
-      document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
+      document.getElementById('sync-msg').innerText = 'Flujo en vivo';
     }
 
-    // Petición dinámica JSONP
-    function cargarDatos() {
-      const oldScript = document.getElementById('jsonp-script');
-      if (oldScript) oldScript.remove();
-
-      const script = document.createElement('script');
-      script.id = 'jsonp-script';
-      script.src = `${SCRIPT_URL}?callback=renderDashboard&_=${new Date().getTime()}`;
-      
-      script.onerror = function() {
+    async function cargarDatos() {
+      try {
+        // Lee directamente el archivo datos.json que crea Google Sheets en tu repositorio
+        const response = await fetch(`./datos.json?_=${new Date().getTime()}`);
+        if (!response.ok) throw new Error("No se pudo cargar datos.json");
+        const data = await response.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.error("Error al cargar datos localmente:", err);
         document.getElementById('loading-overlay').style.display = 'none';
-        document.getElementById('sync-msg').innerText = '⚠️ Error de sincronización';
-      };
-
-      document.body.appendChild(script);
+        document.getElementById('sync-msg').innerText = '⚠️ Error al cargar datos';
+      }
     }
 
     window.onload = cargarDatos;
