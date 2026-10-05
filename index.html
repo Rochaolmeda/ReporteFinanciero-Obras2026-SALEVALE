@@ -431,7 +431,7 @@
       <div class="kpi-card purple">
         <div class="kpi-top">
           <span class="kpi-title">Presupuesto SIROC</span>
-          <span class="kpi-icon">🏛️</span>
+          <span class="kpi-icon">🏛️️</span>
         </div>
         <div class="kpi-value" id="kpi-siroc">$0</div>
       </div>
@@ -505,6 +505,9 @@
   </div>
 
   <script>
+    // Coloca aquí la URL del Web App de Apps Script (debe desplegarse como 'Cualquier persona')
+    const API_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
+
     function renderDashboard(data) {
       document.getElementById('loading-overlay').style.display = 'none';
 
@@ -553,10 +556,10 @@
           balanceLabel = '✅ Liquidado';
           balanceBoxClass = 'box-paid';
         } else {
-          const isPendiente = s.estatus.toLowerCase().includes('pendiente');
+          const isPendiente = s.estatus ? s.estatus.toLowerCase().includes('pendiente') : false;
           const badgeClass = isPendiente ? 'badge-pending' : 'badge-ok';
           const badgeIcon = isPendiente ? '⚠️' : '✅';
-          badgeHtml = `<span class="badge ${badgeClass}">${badgeIcon} ${s.estatus}</span>`;
+          badgeHtml = `<span class="badge ${badgeClass}">${badgeIcon}${s.estatus || 'Activo'}</span>`;
         }
 
         // Render de la Tarjeta
@@ -565,8 +568,7 @@
         card.innerHTML = `
           <div>
             <div class="branch-card-header">
-              <span class="branch-card-title">🏢 ${s.nombre}</span>
-              ${badgeHtml}
+              <span class="branch-card-title">🏢 ${s.nombre}</span>${badgeHtml}
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">
               Avance Real: <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'var(--text)')};">${s.porcentaje}</strong>
@@ -604,47 +606,4 @@
           <td class="num-col">${s.pptoSiroc}</td>
           <td class="num-col" style="color: var(--contract-blue); font-weight: 600;">${s.contratado}</td>
           <td class="num-col" style="color: var(--invoice-amber); font-weight: 600;">${s.facturado}</td>
-          <td class="num-col" style="color: var(--money-green); font-weight: 600;">${s.pagado}</td>
-          <td class="num-col" style="color: ${isOverpaid || s.saldo.includes('-') ? 'var(--debt-red)' : 'inherit'}; font-weight: 700;">${s.saldo}</td>
-          <td style="text-align: center;">${badgeHtml}</td>
-          <td class="num-col">
-            <div class="table-progress-wrap">
-              <div class="progress-bar ${progressBarClass}" style="width: ${pctBarWidth}%;"></div>
-            </div>
-            <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'inherit')}">${s.porcentaje}</strong>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // 3. Fila de Total Consolidado
-      const tfoot = document.getElementById('tabla-foot');
-      tfoot.innerHTML = `
-        <tr class="total-row">
-          <td>TOTAL GENERAL</td>
-          <td class="num-col">${data.totalConsolidado.pptoSiroc}</td>
-          <td class="num-col" style="color: var(--contract-blue);">${data.totalConsolidado.contratado}</td>
-          <td class="num-col" style="color: var(--invoice-amber);">${data.totalConsolidado.facturado}</td>
-          <td class="num-col" style="color: var(--money-green);">${data.totalConsolidado.pagado}</td>
-          <td class="num-col" style="color: var(--debt-red);">${data.totalConsolidado.saldo}</td>
-          <td style="text-align: center;">-</td>
-          <td class="num-col">${data.totalConsolidado.porcentaje}</td>
-        </tr>
-      `;
-    }
-
-    function cargarDatos() {
-      google.script.run
-        .withSuccessHandler(renderDashboard)
-        .withFailureHandler(err => {
-          console.error(err);
-          document.getElementById('sync-msg').innerText = '⚠️ Error al sincronizar';
-        })
-        .obtenerDatosReporte();
-    }
-
-    window.onload = cargarDatos;
-    setInterval(cargarDatos, 45000);
-  </script>
-</body>
-</html>
+          <td class="num-col" style="color: var(--money-green); font-weight: 600;">${s.pag
