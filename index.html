@@ -608,19 +608,21 @@
       document.getElementById('sync-msg').innerText = 'Flujo en vivo';
     }
 
-    async function cargarDatos() {
-      try {
-        // Lee directamente el archivo datos.json que crea Google Sheets en tu repositorio
-        const response = await fetch(`./datos.json?_=${new Date().getTime()}`);
-        if (!response.ok) throw new Error("No se pudo cargar datos.json");
-        const data = await response.json();
-        renderDashboard(data);
-      } catch (err) {
-        console.error("Error al cargar datos localmente:", err);
-        document.getElementById('loading-overlay').style.display = 'none';
-        document.getElementById('sync-msg').innerText = '⚠️ Error al cargar datos';
-      }
-    }
+  async function cargarDatos() {
+  try {
+    // Se agrega un parámetro dinámico para romper la caché del navegador y GitHub
+    const urlSinCache = `./datos.json?v=${new Date().getTime()}`;
+    const response = await fetch(urlSinCache, { cache: 'no-store' });
+    
+    if (!response.ok) throw new Error("No se pudo cargar datos.json");
+    const data = await response.json();
+    renderDashboard(data);
+  } catch (err) {
+    console.error("Error al cargar datos localmente:", err);
+    document.getElementById('loading-overlay').style.display = 'none';
+    document.getElementById('sync-msg').innerText = '⚠️ Error al cargar datos';
+  }
+}
 
     window.onload = cargarDatos;
     setInterval(cargarDatos, 45000);
