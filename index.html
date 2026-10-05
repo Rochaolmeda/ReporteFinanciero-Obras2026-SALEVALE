@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Control Financiero y Presupuestal 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Librería para leer CSV en Javascript fácil y rápido -->
+  <!-- Librería para procesar el CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
@@ -16,6 +16,7 @@
       --text: #0f172a;
       --text-muted: #64748b;
       
+      /* Paleta Financiera */
       --money-green: #059669;
       --money-green-bg: #ecfdf5;
       --debt-red: #dc2626;
@@ -27,6 +28,7 @@
       --siroc-purple: #7c3aed;
       --siroc-purple-bg: #f5f3ff;
 
+      /* Alertas especiales */
       --alert-overpay-border: #ef4444;
       --alert-overpay-bg: #fff5f5;
       --alert-complete-border: #10b981;
@@ -44,6 +46,7 @@
 
     .container { width: 100%; max-width: 1400px; margin: 0 auto; }
 
+    /* Encabezado */
     .header {
       background: linear-gradient(135deg, #071324 0%, #112239 100%);
       color: white;
@@ -103,6 +106,7 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
+    /* KPIs Globales */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -151,6 +155,7 @@
       gap: 8px;
     }
 
+    /* 1. SECCIÓN: Tarjetas de Sucursal */
     .branch-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
@@ -293,6 +298,7 @@
     .fin-box.box-debt strong { color: var(--debt-red); }
     .fin-box.box-overpay-highlight strong { color: #b91c1c; }
 
+    /* 2. SECCIÓN: TABLA AJUSTADA SIN SCROLLBAR CON ALERTAS */
     .table-container {
       background: var(--card-bg);
       border-radius: 14px;
@@ -402,7 +408,7 @@
 
   <div id="loading-overlay">
     <div style="font-size: 2.2rem;">💵</div>
-    <div>Cargando datos desde Google Sheets...</div>
+    <div>Sincronizando Estado Financiero...</div>
   </div>
 
   <div class="container">
@@ -488,18 +494,19 @@
   </div>
 
   <script>
-    // PEGA AQUÍ LA URL CSV OBTENIDA EN EL PASO 3 DE "PUBLICAR EN LA WEB"
+    // ⚠️ REEMPLAZA ESTA URL CON TU ENLACE CSV DE "PUBLICAR EN LA WEB"
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlf2kL826sSWaXz7pVvVuAVqccva5-k9e9nyK2ZdNaQ0RXZIvXinmVDJnH9vv0d1sWBRHs_eubP3R9/pub?gid=275469149&single=true&output=csv';
 
     function parsearCSVyRenderizar(rows) {
       if (!rows || rows.length < 25) {
-        console.error("El formato de la hoja no coincide con las filas esperadas.");
+        console.error("El formato de la hoja no coincide o faltan filas.");
+        document.getElementById('loading-overlay').style.display = 'none';
+        document.getElementById('sync-msg').innerText = '⚠️ Estructura no válida';
         return;
       }
 
-      // Estructuramos los datos basándonos exactamente en las coordenadas de tu hoja original
       const data = {
-        subtitulo: rows[1] ? rows[1][0] : '', // A2
+        subtitulo: rows[1] ? rows[1][0] : '',
         kpis: {
           pptoSiroc: rows[4][0] || '$0',        // A5
           contratado: rows[4][1] || '$0',       // B5
@@ -519,7 +526,6 @@
         }
       };
 
-      // Mapeo de filas 9 a 24 (índices en base 0: 8 a 23)
       for (let i = 8; i <= 23; i++) {
         const row = rows[i];
         if (row && row[0] && row[0].trim() !== '') {
@@ -660,21 +666,25 @@
       `;
     }
 
-    function cargarDatos() {
-      Papa.parse(CSV_URL, {
-        download: true,
-        header: false,
-        skipEmptyLines: false,
-        complete: function(results) {
-          parsearCSVyRenderizar(results.data);
-          document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
-        },
-        error: function(err) {
-          console.error("Error leyendo el CSV:", err);
-          document.getElementById('loading-overlay').style.display = 'none';
-          document.getElementById('sync-msg').innerText = '⚠️️ Error al cargar CSV';
-        }
-      });
+    async function cargarDatos() {
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error("Respuesta no OK");
+        const csvText = await response.text();
+
+        Papa.parse(csvText, {
+          header: false,
+          skipEmptyLines: false,
+          complete: function(results) {
+            parsearCSVyRenderizar(results.data);
+            document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
+          }
+        });
+      } catch (err) {
+        console.error("Error cargando los datos:", err);
+        document.getElementById('loading-overlay').style.display = 'none';
+        document.getElementById('sync-msg').innerText = '⚠️ Error de sincronización';
+      }
     }
 
     window.onload = cargarDatos;
