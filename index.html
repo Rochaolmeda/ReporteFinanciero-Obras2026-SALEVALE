@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Control Financiero y Presupuestal 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Librería para leer CSV en Javascript fácil y rápido -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
       --primary: #0b192c;
@@ -14,7 +16,6 @@
       --text: #0f172a;
       --text-muted: #64748b;
       
-      /* Paleta Financiera */
       --money-green: #059669;
       --money-green-bg: #ecfdf5;
       --debt-red: #dc2626;
@@ -26,7 +27,6 @@
       --siroc-purple: #7c3aed;
       --siroc-purple-bg: #f5f3ff;
 
-      /* Alertas especiales */
       --alert-overpay-border: #ef4444;
       --alert-overpay-bg: #fff5f5;
       --alert-complete-border: #10b981;
@@ -44,7 +44,6 @@
 
     .container { width: 100%; max-width: 1400px; margin: 0 auto; }
 
-    /* Encabezado */
     .header {
       background: linear-gradient(135deg, #071324 0%, #112239 100%);
       color: white;
@@ -104,7 +103,6 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    /* KPIs Globales */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -153,7 +151,6 @@
       gap: 8px;
     }
 
-    /* 1. SECCIÓN: Tarjetas de Sucursal */
     .branch-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
@@ -179,7 +176,6 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.05);
     }
 
-    /* ESTILOS DE ALERTA EN TARJETAS */
     .branch-card.card-overpaid {
       border: 2px solid var(--alert-overpay-border);
       background-color: var(--alert-overpay-bg);
@@ -207,7 +203,6 @@
       line-height: 1.25;
     }
 
-    /* Badges */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -298,7 +293,6 @@
     .fin-box.box-debt strong { color: var(--debt-red); }
     .fin-box.box-overpay-highlight strong { color: #b91c1c; }
 
-    /* 2. SECCIÓN: TABLA AJUSTADA SIN SCROLLBAR CON ALERTAS */
     .table-container {
       background: var(--card-bg);
       border-radius: 14px;
@@ -348,7 +342,6 @@
     tr:nth-child(even) td { background-color: #fbfcfd; }
     tr:hover td { background-color: #f1f5f9; }
 
-    /* Filas con Alertas */
     tr.tr-overpaid td {
       background-color: #fef2f2 !important;
       border-bottom: 1px solid #fecaca;
@@ -409,11 +402,10 @@
 
   <div id="loading-overlay">
     <div style="font-size: 2.2rem;">💵</div>
-    <div>Sincronizando Estado Financiero de Sucursales...</div>
+    <div>Cargando datos desde Google Sheets...</div>
   </div>
 
   <div class="container">
-    <!-- Encabezado -->
     <header class="header">
       <div>
         <div class="header-badge">📊 Control Financiero de Obra</div>
@@ -426,12 +418,11 @@
       </div>
     </header>
 
-    <!-- Indicadores Globales (KPIs) -->
     <section class="kpi-grid">
       <div class="kpi-card purple">
         <div class="kpi-top">
           <span class="kpi-title">Presupuesto SIROC</span>
-          <span class="kpi-icon">🏛️️</span>
+          <span class="kpi-icon">🏛</span>
         </div>
         <div class="kpi-value" id="kpi-siroc">$0</div>
       </div>
@@ -472,13 +463,9 @@
       </div>
     </section>
 
-    <!-- 1. Tarjetas Financieras por Sucursal -->
     <h2 class="section-title"><span>💳</span> Avance y Flujo Financiero por Sucursal</h2>
-    <section class="branch-grid" id="branch-grid-container">
-      <!-- Inyectadas dinámicamente -->
-    </section>
+    <section class="branch-grid" id="branch-grid-container"></section>
 
-    <!-- 2. Tabla Consolidada Ajustada (Sin Scroll) -->
     <h2 class="section-title"><span>📑</span> Estado Consolidado Detallado</h2>
     <section class="table-container">
       <table>
@@ -494,24 +481,67 @@
             <th style="text-align: right;">📈 % Pagado</th>
           </tr>
         </thead>
-        <tbody id="tabla-body">
-          <!-- Inyectadas dinámicamente -->
-        </tbody>
-        <tfoot id="tabla-foot">
-          <!-- Total consolidado -->
-        </tfoot>
+        <tbody id="tabla-body"></tbody>
+        <tfoot id="tabla-foot"></tfoot>
       </table>
     </section>
   </div>
 
   <script>
-    // Coloca aquí la URL del Web App de Apps Script (debe desplegarse como 'Cualquier persona')
-    const API_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
+    // PEGA AQUÍ LA URL CSV OBTENIDA EN EL PASO 3 DE "PUBLICAR EN LA WEB"
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlf2kL826sSWaXz7pVvVuAVqccva5-k9e9nyK2ZdNaQ0RXZIvXinmVDJnH9vv0d1sWBRHs_eubP3R9/pub?gid=275469149&single=true&output=csv';
+
+    function parsearCSVyRenderizar(rows) {
+      if (!rows || rows.length < 25) {
+        console.error("El formato de la hoja no coincide con las filas esperadas.");
+        return;
+      }
+
+      // Estructuramos los datos basándonos exactamente en las coordenadas de tu hoja original
+      const data = {
+        subtitulo: rows[1] ? rows[1][0] : '', // A2
+        kpis: {
+          pptoSiroc: rows[4][0] || '$0',        // A5
+          contratado: rows[4][1] || '$0',       // B5
+          facturado: rows[4][2] || '$0',        // C5
+          pagado: rows[4][3] || '$0',           // D5
+          saldoPendiente: rows[4][5] || '$0',   // F5
+          porcentajePagado: rows[4][7] || '0%'  // H5
+        },
+        sucursales: [],
+        totalConsolidado: {
+          pptoSiroc: rows[24][1] || '$0',      // B25
+          contratado: rows[24][2] || '$0',     // C25
+          facturado: rows[24][3] || '$0',      // D25
+          pagado: rows[24][5] || '$0',         // F25
+          saldo: rows[24][6] || '$0',          // G25
+          porcentaje: rows[24][8] || '0%'      // I25
+        }
+      };
+
+      // Mapeo de filas 9 a 24 (índices en base 0: 8 a 23)
+      for (let i = 8; i <= 23; i++) {
+        const row = rows[i];
+        if (row && row[0] && row[0].trim() !== '') {
+          data.sucursales.push({
+            nombre: row[0].trim(),   // A
+            pptoSiroc: row[1] || '',  // B
+            contratado: row[2] || '', // C
+            facturado: row[3] || '',  // D
+            pagado: row[5] || '',     // F
+            saldo: row[6] || '',      // G
+            estatus: row[7] || '',    // H
+            porcentaje: row[8] || ''  // I
+          });
+        }
+      }
+
+      renderDashboard(data);
+    }
 
     function renderDashboard(data) {
       document.getElementById('loading-overlay').style.display = 'none';
 
-      // 1. Textos y KPIs Generales
       if (data.subtitulo) {
         document.getElementById('subtitulo-txt').innerText = data.subtitulo;
       }
@@ -522,20 +552,17 @@
       document.getElementById('kpi-saldo').innerText = data.kpis.saldoPendiente;
       document.getElementById('kpi-porcentaje').innerText = data.kpis.porcentajePagado;
 
-      // 2. Render de Tarjetas y Tabla
       const gridContainer = document.getElementById('branch-grid-container');
       const tbody = document.getElementById('tabla-body');
       gridContainer.innerHTML = '';
       tbody.innerHTML = '';
 
       data.sucursales.forEach(s => {
-        // Cálculo del valor porcentual numérico
         let pctRaw = parseFloat(s.porcentaje.replace('%', '').replace(',', '.')) || 0;
         let isOverpaid = pctRaw > 100;
         let isCompleted = Math.abs(pctRaw - 100) < 0.05;
         let pctBarWidth = isOverpaid ? 100 : Math.min(Math.max(pctRaw, 0), 100);
 
-        // Determinación de clases y alertas
         let cardAlertClass = '';
         let trAlertClass = '';
         let badgeHtml = '';
@@ -559,16 +586,16 @@
           const isPendiente = s.estatus ? s.estatus.toLowerCase().includes('pendiente') : false;
           const badgeClass = isPendiente ? 'badge-pending' : 'badge-ok';
           const badgeIcon = isPendiente ? '⚠️' : '✅';
-          badgeHtml = `<span class="badge ${badgeClass}">${badgeIcon}${s.estatus || 'Activo'}</span>`;
+          badgeHtml = `<span class="badge ${badgeClass}">${badgeIcon} ${s.estatus || 'Activo'}</span>`;
         }
 
-        // Render de la Tarjeta
         const card = document.createElement('div');
         card.className = `branch-card ${cardAlertClass}`;
         card.innerHTML = `
           <div>
             <div class="branch-card-header">
-              <span class="branch-card-title">🏢 ${s.nombre}</span>${badgeHtml}
+              <span class="branch-card-title">🏢 ${s.nombre}</span>
+              ${badgeHtml}
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">
               Avance Real: <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'var(--text)')};">${s.porcentaje}</strong>
@@ -598,7 +625,6 @@
         `;
         gridContainer.appendChild(card);
 
-        // Render de la Fila en la Tabla
         const tr = document.createElement('tr');
         if (trAlertClass) tr.className = trAlertClass;
         tr.innerHTML = `
@@ -606,4 +632,53 @@
           <td class="num-col">${s.pptoSiroc}</td>
           <td class="num-col" style="color: var(--contract-blue); font-weight: 600;">${s.contratado}</td>
           <td class="num-col" style="color: var(--invoice-amber); font-weight: 600;">${s.facturado}</td>
-          <td class="num-col" style="color: var(--money-green); font-weight: 600;">${s.pag
+          <td class="num-col" style="color: var(--money-green); font-weight: 600;">${s.pagado}</td>
+          <td class="num-col" style="color: ${isOverpaid || (s.saldo && s.saldo.includes('-')) ? 'var(--debt-red)' : 'inherit'}; font-weight: 700;">${s.saldo}</td>
+          <td style="text-align: center;">${badgeHtml}</td>
+          <td class="num-col">
+            <div class="table-progress-wrap">
+              <div class="progress-bar ${progressBarClass}" style="width: ${pctBarWidth}%;"></div>
+            </div>
+            <strong style="color: ${isOverpaid ? '#dc2626' : (isCompleted ? '#059669' : 'inherit')}">${s.porcentaje}</strong>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const tfoot = document.getElementById('tabla-foot');
+      tfoot.innerHTML = `
+        <tr class="total-row">
+          <td>TOTAL GENERAL</td>
+          <td class="num-col">${data.totalConsolidado.pptoSiroc}</td>
+          <td class="num-col" style="color: var(--contract-blue);">${data.totalConsolidado.contratado}</td>
+          <td class="num-col" style="color: var(--invoice-amber);">${data.totalConsolidado.facturado}</td>
+          <td class="num-col" style="color: var(--money-green);">${data.totalConsolidado.pagado}</td>
+          <td class="num-col" style="color: var(--debt-red);">${data.totalConsolidado.saldo}</td>
+          <td style="text-align: center;">-</td>
+          <td class="num-col">${data.totalConsolidado.porcentaje}</td>
+        </tr>
+      `;
+    }
+
+    function cargarDatos() {
+      Papa.parse(CSV_URL, {
+        download: true,
+        header: false,
+        skipEmptyLines: false,
+        complete: function(results) {
+          parsearCSVyRenderizar(results.data);
+          document.getElementById('sync-msg').innerText = 'Flujo en vivo (Recarga: 45s)';
+        },
+        error: function(err) {
+          console.error("Error leyendo el CSV:", err);
+          document.getElementById('loading-overlay').style.display = 'none';
+          document.getElementById('sync-msg').innerText = '⚠️️ Error al cargar CSV';
+        }
+      });
+    }
+
+    window.onload = cargarDatos;
+    setInterval(cargarDatos, 45000);
+  </script>
+</body>
+</html>
