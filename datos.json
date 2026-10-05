@@ -1,0 +1,181 @@
+{
+  "subtitulo": "Consolidado de sucursales • Última actualización: 2026-10-05 14:41:25",
+  "kpis": {
+    "pptoSiroc": "$17,215,307.76",
+    "contratado": "$12,405,975.25",
+    "facturado": "$0.00",
+    "pagado": "$0.00",
+    "saldoPendiente": "$12,405,975.25",
+    "porcentajePagado": "0.0%"
+  },
+  "sucursales": [
+    {
+      "nombre": "CALERA",
+      "pptoSiroc": "$818,129.00",
+      "contratado": "$965,892.89",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$965,892.89",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "SOMBRERETE",
+      "pptoSiroc": "$1,278,829.31",
+      "contratado": "$1,097,287.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,097,287.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "LINARES",
+      "pptoSiroc": "$0.00",
+      "contratado": "$1,488,097.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,488,097.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "ZAMORA",
+      "pptoSiroc": "$1,556,613.81",
+      "contratado": "$207,474.45",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$207,474.45",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "JUÁREZ \n(PTO. PEÑASCO)",
+      "pptoSiroc": "$2,198,389.78",
+      "contratado": "$138,750.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$138,750.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "CELAYA",
+      "pptoSiroc": "$1,614,781.01",
+      "contratado": "$1,286,868.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,286,868.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "LIBRAMIENTO (PATZCUARO)",
+      "pptoSiroc": "$1,505,525.01",
+      "contratado": "$1,189,322.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,189,322.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "PIEDRAS NEGRAS",
+      "pptoSiroc": "$0.00",
+      "contratado": "$1,541,137.29",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,541,137.29",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "CASAS GRANDES",
+      "pptoSiroc": "$2,094,414.02",
+      "contratado": "$1,695,892.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,695,892.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "LA PAZ",
+      "pptoSiroc": "$1,830,049.84",
+      "contratado": "$133,466.62",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$133,466.62",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "ROSARITO",
+      "pptoSiroc": "$1,269,744.57",
+      "contratado": "$1,280,362.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,280,362.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "MARTÍNEZ DE LA TORRE",
+      "pptoSiroc": "$1,649,711.53",
+      "contratado": "$1,381,426.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$1,381,426.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "CADEREYTA",
+      "pptoSiroc": "$0.00",
+      "contratado": "$0.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$0.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "EL FUERTE",
+      "pptoSiroc": "$1,399,119.88",
+      "contratado": "$0.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$0.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "VICENTE GUERRERO",
+      "pptoSiroc": "$0.00",
+      "contratado": "$0.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$0.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    },
+    {
+      "nombre": "JIMENEZ",
+      "pptoSiroc": "$0.00",
+      "contratado": "$0.00",
+      "facturado": "$0.00",
+      "pagado": "$0.00",
+      "saldo": "$0.00",
+      "estatus": "Sin pendientes",
+      "porcentaje": "0.0%"
+    }
+  ],
+  "totalConsolidado": {
+    "pptoSiroc": "$17,215,307.76",
+    "contratado": "$12,405,975.25",
+    "facturado": "$0.00",
+    "pagado": "$0.00",
+    "saldo": "$12,405,975.25",
+    "porcentaje": "0.0%"
+  }
+}
