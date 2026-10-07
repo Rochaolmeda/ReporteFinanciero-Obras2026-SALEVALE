@@ -1,133 +1,133 @@
 {
-  "subtitulo": "Consolidado de sucursales • Última actualización: 2026-10-06 08:02:44",
+  "subtitulo": "Consolidado de sucursales • Última actualización: 2026-10-07 15:59:27",
   "kpis": {
     "pptoSiroc": "$17,215,307.76",
-    "contratado": "$12,405,975.25",
-    "facturado": "$0.00",
-    "pagado": "$0.00",
-    "saldoPendiente": "$12,405,975.25",
-    "porcentajePagado": "0.0%"
+    "contratado": "$12,389,455.34",
+    "facturado": "$2,205,908.50",
+    "pagado": "$2,205,908.50",
+    "saldoPendiente": "$10,183,546.84",
+    "porcentajePagado": "17.8%"
   },
   "sucursales": [
     {
       "nombre": "CALERA",
       "pptoSiroc": "$818,129.00",
       "contratado": "$965,892.89",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$965,892.89",
+      "facturado": "$90,563.50",
+      "pagado": "$90,563.50",
+      "saldo": "$875,329.39",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "9.4%"
     },
     {
       "nombre": "SOMBRERETE",
       "pptoSiroc": "$1,278,829.31",
       "contratado": "$1,097,287.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,097,287.00",
+      "facturado": "$148,175.00",
+      "pagado": "$148,175.00",
+      "saldo": "$949,112.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "13.5%"
     },
     {
       "nombre": "LINARES",
       "pptoSiroc": "$0.00",
       "contratado": "$1,488,097.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,488,097.00",
+      "facturado": "$354,020.00",
+      "pagado": "$354,020.00",
+      "saldo": "$1,134,077.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "23.8%"
     },
     {
       "nombre": "ZAMORA",
       "pptoSiroc": "$1,556,613.81",
       "contratado": "$207,474.45",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$207,474.45",
+      "facturado": "$186,000.00",
+      "pagado": "$186,000.00",
+      "saldo": "$21,474.45",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "89.6%"
     },
     {
       "nombre": "JUÁREZ \n(PTO. PEÑASCO)",
       "pptoSiroc": "$2,198,389.78",
       "contratado": "$138,750.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$138,750.00",
+      "facturado": "$138,750.00",
+      "pagado": "$138,750.00",
+      "saldo": "$0.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "100.0%"
     },
     {
       "nombre": "CELAYA",
       "pptoSiroc": "$1,614,781.01",
       "contratado": "$1,286,868.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,286,868.00",
+      "facturado": "$150,000.00",
+      "pagado": "$150,000.00",
+      "saldo": "$1,136,868.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "11.7%"
     },
     {
       "nombre": "LIBRAMIENTO (PATZCUARO)",
       "pptoSiroc": "$1,505,525.01",
       "contratado": "$1,189,322.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,189,322.00",
+      "facturado": "$116,400.00",
+      "pagado": "$116,400.00",
+      "saldo": "$1,072,922.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "9.8%"
     },
     {
       "nombre": "PIEDRAS NEGRAS",
       "pptoSiroc": "$0.00",
-      "contratado": "$1,541,137.29",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,541,137.29",
+      "contratado": "$1,547,204.00",
+      "facturado": "$130,000.00",
+      "pagado": "$130,000.00",
+      "saldo": "$1,417,204.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "8.4%"
     },
     {
       "nombre": "CASAS GRANDES",
       "pptoSiroc": "$2,094,414.02",
       "contratado": "$1,695,892.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,695,892.00",
+      "facturado": "$400,000.00",
+      "pagado": "$400,000.00",
+      "saldo": "$1,295,892.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "23.6%"
     },
     {
       "nombre": "LA PAZ",
       "pptoSiroc": "$1,830,049.84",
-      "contratado": "$133,466.62",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$133,466.62",
+      "contratado": "$140,000.00",
+      "facturado": "$140,000.00",
+      "pagado": "$140,000.00",
+      "saldo": "$0.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "100.0%"
     },
     {
       "nombre": "ROSARITO",
       "pptoSiroc": "$1,269,744.57",
       "contratado": "$1,280,362.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,280,362.00",
+      "facturado": "$170,000.00",
+      "pagado": "$170,000.00",
+      "saldo": "$1,110,362.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "13.3%"
     },
     {
       "nombre": "MARTÍNEZ DE LA TORRE",
       "pptoSiroc": "$1,649,711.53",
-      "contratado": "$1,381,426.00",
-      "facturado": "$0.00",
-      "pagado": "$0.00",
-      "saldo": "$1,381,426.00",
+      "contratado": "$1,352,306.00",
+      "facturado": "$182,000.00",
+      "pagado": "$182,000.00",
+      "saldo": "$1,170,306.00",
       "estatus": "Sin pendientes",
-      "porcentaje": "0.0%"
+      "porcentaje": "13.5%"
     },
     {
       "nombre": "CADEREYTA",
@@ -172,10 +172,10 @@
   ],
   "totalConsolidado": {
     "pptoSiroc": "$17,215,307.76",
-    "contratado": "$12,405,975.25",
-    "facturado": "$0.00",
-    "pagado": "$0.00",
-    "saldo": "$12,405,975.25",
-    "porcentaje": "0.0%"
+    "contratado": "$12,389,455.34",
+    "facturado": "$2,205,908.50",
+    "pagado": "$2,205,908.50",
+    "saldo": "$10,183,546.84",
+    "porcentaje": "17.8%"
   }
 }
